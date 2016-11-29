@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script type="text/javascript" src="../lib/d3.v3.js"></script>
+
+        <style>
+            html,body,div {margin: 0; padding: 0;}
+            .svg-container { background: url('../imgs/pattern_tile.png'); }
+        </style>
+    </head>
+    <body>
+
+        <div class="svg-container"></div>
+        
+
+
+        <script type="text/javascript" src="../lib/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript">
+
+        $( document ).ready(function() {
+
+            //Width and height
+            var w = $(window).width();
+            var h = 600;
+            
+            //generate randomly 100 center points for circles
+            var dataset = generateData(100);
+
+
+            var zoom = d3.behavior.zoom()
+                .scaleExtent([0.5, 10])
+                .on("zoom", zoomed);
+
+            function zoomed() {
+              circleGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
+            
+
+            //Create SVG element
+            var svg = d3.select(".svg-container")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h)
+                        .call(zoom);
+
+            var circleGroup = svg.append("g").attr("class","circle-group");
+
+            var circles = circleGroup.selectAll("circle")
+                 .data(dataset)
+                 .enter()
+                 .append("circle");
+
+             circles.attr("cx", function(d) {
+                     return d[0];
+                 })
+                .attr("cy", function(d) {
+                     return d[1];
+                 })
+                .attr("r", function(d) {
+                     return randomIntFromInterval(5,25);
+                })
+                .attr("fill", "#2196F3")
+                .attr("stroke", "#3F51B5")
+                .attr("stroke-width", 2);
+
+
+            
+
+            function generateData(quantity) {
+                var data = new Array();
+                for (i=0; i<quantity; i++) {
+                    tmp = [randomIntFromInterval(0,w),
+                           randomIntFromInterval(0,h)]
+                    data.push(tmp);
+                }
+                return data;
+            }
+
+
+            function randomIntFromInterval(min,max)
+            {
+                return Math.floor(Math.random()*(max-min+1)+min);
+            }
+
+
+            // 
+            // as the window resizes, svg takes the size of the window
+            // and remains "full width"
+            //
+            $( window ).resize(function() {
+                w = $(window).width();
+                svg.attr("width", w);
+            });
+
+        }); // end of   $( document ).ready()
+
+
+
+
+
+        
+
+
+
+        </script>
+    </body>
+</html>     

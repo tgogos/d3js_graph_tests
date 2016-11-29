@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script type="text/javascript" src="../lib/d3.v3.js"></script>
+
+        <style>
+            html,body,div {margin: 0; padding: 0;}
+            .svg-container { background: url('../imgs/pattern_tile.png'); }
+            svg circle { fill:#2196F3; stroke:#3F51B5; stroke-width:2; cursor: pointer; }
+            svg circle.dragging { fill: #F52D55; stroke: #920B26; stroke-width: 2px; }
+        </style>
+    </head>
+    <body>
+
+        <div class="svg-container"></div>
+        
+
+
+        <script type="text/javascript" src="../lib/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript">
+
+        $( document ).ready(function() {
+
+            //Width and height
+            var w = $(window).width();
+            var h = 600;
+            
+            //generate randomly 100 center points for circles
+            var dataset = generateData(100);
+
+
+
+
+
+            var zoom = d3.behavior.zoom()
+                .scaleExtent([1, 10])
+                .on("zoom", zoomed);
+
+            function zoomed() {
+              circleGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
+
+
+
+
+
+            var drag = d3.behavior.drag()
+                .origin(function(d) { return d; })
+                .on("dragstart", dragstarted)
+                .on("drag", dragged)
+                .on("dragend", dragended);
+
+            function dragstarted(d) {
+              d3.event.sourceEvent.stopPropagation();
+              d3.select(this).classed("dragging", true);
+            }
+
+            function dragged(d) {
+              d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+            }
+
+            function dragended(d) {
+              d3.select(this).classed("dragging", false);
+            }
+
+
+
+            
+            
+
+            //Create SVG element
+            var svg = d3.select(".svg-container")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h)
+                        .call(zoom);
+
+            var circleGroup = svg.append("g").attr("class","circle-group");
+
+            var circles = circleGroup.selectAll("circle")
+                 .data(dataset)
+                 .enter()
+                 .append("circle")
+                 .call(drag);
+
+             circles.attr("cx", function(d) {
+                     return d.x;
+                 })
+                .attr("cy", function(d) {
+                     return d.y;
+                 })
+                .attr("r", function(d) {
+                     return randomIntFromInterval(5,25);
+                });
+
+
+            
+
+            function generateData(quantity) {
+                var data = new Array(quantity);
+                for (i=0; i<quantity; i++) {
+                    data[i] = new Object();
+                    data[i].x = randomIntFromInterval(0,w)
+                    data[i].y = randomIntFromInterval(0,h)
+                }
+                return data;
+            }
+
+
+            function randomIntFromInterval(min,max)
+            {
+                return Math.floor(Math.random()*(max-min+1)+min);
+            }
+
+
+            $( window ).resize(function() {
+                w = $(window).width();
+                svg.attr("width", w);
+            });
+
+        }); // end of   $( document ).ready()
+
+
+
+
+
+        
+
+
+
+        </script>
+    </body>
+</html>     
