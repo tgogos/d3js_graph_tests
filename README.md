@@ -12,3 +12,4 @@
 
 ## Screenshots
 
+![](/README.files/example.jpg)
