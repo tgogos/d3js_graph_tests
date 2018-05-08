@@ -1,0 +1,2 @@
+.page-wrapper { position: relative; }
+.side-popup { display:none; position:absolute; right: 0;width: 25%;top: 0;height: 100%; padding: 50px; min-width: 360px; background-color: #f8f8f8; z-index: 100}

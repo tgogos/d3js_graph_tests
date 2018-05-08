@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <title>Network | Manipulation | Edit Edge Without Drag</title>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <link rel="stylesheet" href="bootstrap.min.css">
 
   <style type="text/css">
     html, body, div, p{
@@ -40,40 +40,12 @@
     #operation {
       font-size:28px;
     }
-    #node-popUp {
-      display:none;
-      position:absolute;
-      top:350px;
-      left:170px;
-      z-index:299;
-      width:250px;
-      height:120px;
-      background-color: #f9f9f9;
-      border-style:solid;
-      border-width:3px;
-      border-color: #5394ed;
-      padding:10px;
-      text-align: center;
-    }
-    #edge-popUp {
-      display:none;
-      position:absolute;
-      top:350px;
-      left:170px;
-      z-index:299;
-      width:250px;
-      height:90px;
-      background-color: #f9f9f9;
-      border-style:solid;
-      border-width:3px;
-      border-color: #5394ed;
-      padding:10px;
-      text-align: center;
-    }
+
   </style>
   <script type="text/javascript" src="exampleUtil.js"></script>
   <script type="text/javascript" src="dist/vis.js"></script>
   <link href="dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <link href="custom.css" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
     var nodes = null;
@@ -111,7 +83,7 @@
           addNode: function (data, callback) {
             // filling in the popup DOM elements
             document.getElementById('node-operation').innerHTML = "Add Node";
-            editNode(data, clearNodePopUp, callback);
+            addNode(data, clearNodePopUp, callback);
           },
           editNode: function (data, callback) {
             // filling in the popup DOM elements
@@ -147,6 +119,13 @@
       network = new vis.Network(container, data, options);
     }
 
+    function addNode(data, cancelAction, callback) {
+      document.getElementById('node-label').value = data.label;
+      document.getElementById('node-saveButton').onclick = saveNewNodeData.bind(this, data, callback);
+      document.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
+      document.getElementById('node-popUp').style.display = 'block';
+    }
+
     function editNode(data, cancelAction, callback) {
       document.getElementById('node-label').value = data.label;
       document.getElementById('node-saveButton').onclick = saveNodeData.bind(this, data, callback);
@@ -167,6 +146,12 @@
     }
 
     function saveNodeData(data, callback) {
+      data.label = document.getElementById('node-label').value;
+      clearNodePopUp();
+      callback(data);
+    }
+
+    function saveNewNodeData(data, callback) {
       data = {id: null, font:{size:12}, size:60, label: 'Apache', shape: 'circularImage', image: './img/apache.png', color: {background:'cyan', border:'#cccccc',highlight:{border:'#999999'},hover:{border:'#aaaaaa'}}};
       data.label = document.getElementById('node-label').value;
       clearNodePopUp();
@@ -212,36 +197,60 @@
 
 <body onload="init();">
 
-<div id="node-popUp">
-  <span id="node-operation">node</span> <br>
-  <table style="margin:auto;">
-    <tr>
-      <td>id</td><td><input id="node-id" value="new value" /></td>
-    </tr>
-    <tr>
-      <td>label</td><td><input id="node-label" value="new value" /></td>
-    </tr>
-  </table>
-  <input type="button" value="save" id="node-saveButton" />
-  <input type="button" value="cancel" id="node-cancelButton" />
-</div>
-
-<div id="edge-popUp">
-  <span id="edge-operation">edge</span> <br>
-  <table style="margin:auto;">
-    <tr>
-      <td>label</td><td><input id="edge-label" value="new value" /></td>
-    </tr></table>
-  <input type="button" value="save" id="edge-saveButton" />
-  <input type="button" value="cancel" id="edge-cancelButton" />
-</div>
-
-<div id="mynetwork"></div>
+  <div class="page-wrapper">
 
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <div id="node-popUp" class="side-popup">
+      <h2 id="node-operation">node</h2>
+      <div class="popup-row">
+        <label for="node-id">Node-ID</label>
+        <input type="text" class="form-control" id="node-id" placeholder="" value="" required="">
+        <div class="invalid-feedback">
+          Valid node ID is required.
+        </div>
+
+        <label for="node-label">Node-Label</label>
+        <input type="text" class="form-control" id="node-label" placeholder="" value="" required="">
+        <div class="invalid-feedback">
+          Valid node label is required.
+        </div>
+        
+        <br>
+        <button class="btn btn-secondary" type="cancel" id="node-cancelButton">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="node-saveButton">Save</button>
+
+      </div>
+    </div>
+
+
+
+    <div id="edge-popUp" class="side-popup">
+      <h2 id="edge-operation">edge</h2>
+      <div class="popup-row">
+        <label for="edge-label">Edge-label</label>
+        <input type="text" class="form-control" id="edge-label" placeholder="" value="" required="">
+        <div class="invalid-feedback">
+          Valid node ID is required.
+        </div>
+
+        <br>
+        <button class="btn btn-secondary" type="cancel" id="edge-cancelButton">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="edge-saveButton">Save</button>
+
+      </div>
+    </div>
+
+
+
+    <div id="mynetwork"></div>
+
+  </div>
+
+
+
+  <script src="jquery-3.3.1.slim.min.js"></script>
+  <script src="popper.min.js"></script>
+  <script src="bootstrap.min.js"></script>
 
 </body>
 </html>
