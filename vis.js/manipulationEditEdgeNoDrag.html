@@ -154,6 +154,9 @@
     function saveNewNodeData(data, callback) {
       data = {id: null, font:{size:12}, size:60, label: 'Apache', shape: 'circularImage', image: './img/apache.png', color: {background:'cyan', border:'#cccccc',highlight:{border:'#999999'},hover:{border:'#aaaaaa'}}};
       data.label = document.getElementById('node-label').value;
+      var select = document.getElementById("node-type");
+      var node_type = select.options[select.selectedIndex].value;
+      data.image = './img/' + node_type.toLowerCase() + '.png';
       clearNodePopUp();
       callback(data);
     }
@@ -203,18 +206,28 @@
     <div id="node-popUp" class="side-popup">
       <h2 id="node-operation">node</h2>
       <div class="popup-row">
-        <label for="node-id">Node-ID</label>
+        <label for="node-id">Node ID</label>
         <input type="text" class="form-control" id="node-id" placeholder="" value="" required="">
         <div class="invalid-feedback">
           Valid node ID is required.
         </div>
 
-        <label for="node-label">Node-Label</label>
+
+        <br>
+        <label for="node-label">Node label</label>
         <input type="text" class="form-control" id="node-label" placeholder="" value="" required="">
         <div class="invalid-feedback">
           Valid node label is required.
         </div>
+
+        <br>
+        <label for="node-type">Node type</label>
+        <select class="custom-select" id="node-type">
+          <option value="Apache" selected>Apache</option>
+          <option value="MySQL">MySQL</option>
+        </select>
         
+        <br>
         <br>
         <button class="btn btn-secondary" type="cancel" id="node-cancelButton">Cancel</button>
         <button class="btn btn-primary" type="submit" id="node-saveButton">Save</button>
