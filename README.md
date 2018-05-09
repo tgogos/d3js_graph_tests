@@ -1,7 +1,10 @@
 # Graph tool similar to Juju-GUI using D3.js
 
  - The idea is to be able to add/delete nodes and connect/disconnect them.
- - Folders 1.{...} through 4{...} where the intermediate steps till the final result (5) as I was trying to find my way on how to use d3.js.
+ - Folders 1.{...} through 4{...} were the intermediate steps till the final result (5) as I was trying to find my way on how to use d3.js.
+ - If you want to serve it with a tiny web server and `Go` is available on your system you can use the `server.go` file. Run it with:
+
+        go run server.go
 
 ## Functionality:
 
@@ -15,3 +18,11 @@
 ## Screenshots
 
 ![](/README.files/example.jpg)
+
+
+## Update May 2018, the same with vis.js
+
+ - More or less similar functionality (zoom in/out, panning, add/remove/edit nodes and links) by using vis.js
+ - You can find it inside the `vis.js` folder
+
+![](/README.files/vis.js-screenshot.jpg)
